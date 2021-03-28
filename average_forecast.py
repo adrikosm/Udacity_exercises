@@ -90,12 +90,6 @@ mae
 """# Moving Average"""
 
 def moving_average_forecast(series, window_size):
-  forecast = []
-  for time in range(len(series) - window_size):
-    forecast.append(series[time:time + window_size].mean())
-  return np.array(forecast)
-
-def moving_average_forecast(series, window_size):
   mov = np.cumsum(series)
   mov[window_size:] = mov[window_size:] - mov[:-window_size]
   return mov[window_size - 1:-1] / window_size

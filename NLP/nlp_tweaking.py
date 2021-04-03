@@ -65,10 +65,12 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(6, activation='relu'),
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
+
 model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
 model.summary()
 
-num_epochs = 30
+num_epochs = 40
+
 history = model.fit(training_padded,
                     training_labels_final,
                     epochs=num_epochs,
@@ -92,7 +94,6 @@ plot_graphs(history,'loss')
 
 # First get the weights of the embedding layer
 e = model.layers[0]
-
 weights = e.get_weights()[0]
 
 print(weights.shape)
@@ -116,18 +117,19 @@ out_m.close()
 """# Download files to use on `project tensorflow`"""
 
 # Download the files
-# try:
-#   from google.colab import files
-# except ImportError:
-#   pass
-# else:
-#   files.download('vecs.tsv')
-#   files.download('meta.tsv')
+try:
+  from google.colab import files
+except ImportError:
+  pass
+else:
+  files.download('vecs.tsv')
+  files.download('meta.tsv')
 
 """# Lets now predict some fake reviews"""
 
 # Use the model to predict a review   
-fake_reviews = ['I love this phone', 'I hate spaghetti', 
+fake_reviews = ['I love this phone', 
+                'I hate bad suck spaghetti', 
                 'Everything was cold',
                 'Everything was hot exactly as I wanted', 
                 'Everything was green', 
@@ -135,7 +137,7 @@ fake_reviews = ['I love this phone', 'I hate spaghetti',
                 'they gave us free chocolate cake', 
                 'not sure about the wilted flowers on the table',
                 'only works when I stand on tippy toes', 
-                'does not work when I stand on my head']
+                'does work when I stand on my head']
 
 print(fake_reviews) 
 
@@ -144,8 +146,6 @@ padding_type='post'
 sample_sequences = tokenizer.texts_to_sequences(fake_reviews)
 fakes_padded = pad_sequences(sample_sequences, padding=padding_type, maxlen=max_length)           
 
-print('\nHOT OFF THE PRESS! HERE ARE SOME NEWLY MINTED, ABSOLUTELY GENUINE REVIEWS!\n')              
-
 classes = model.predict(fakes_padded)
 
 # The closer the class is to 1, the more positive the review is deemed to be
@@ -153,3 +153,4 @@ for x in range(len(fake_reviews)):
   print(fake_reviews[x])
   print(classes[x])
   print('\n')
+
